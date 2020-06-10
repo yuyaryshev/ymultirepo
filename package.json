@@ -1,0 +1,39 @@
+{
+  "name": "ymultirepo",
+  "version": "0.0.8",
+  "type": "module",
+  "description": "Local package manager. A tool to manage your multi-repo.",
+  "main": "./index.mjs",
+  "keywords": ["pnpm","multi-repo"],
+  "bin": {
+    "ymultirepo": "./bin/index.js"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "index.js",
+    "index.cjs",
+    "index.mjs",
+    "README.md",
+    "LICENSE",
+    "Unlicense",
+    "Unlicense.txt"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuyaryshev/ymultirepo.git"
+  },
+  "author": "Yuri Yaryshev",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/yuyaryshev/ymultirepo/issues"
+  },
+  "homepage": "https://github.com/yuyaryshev/ymultirepo#readme",
+  "devDependencies": {
+    "prettier": "^2.0.5"
+  }
+}
