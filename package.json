@@ -1,10 +1,12 @@
 {
   "name": "ymultirepo",
   "version": "0.0.8",
-  "type": "module",
   "description": "Local package manager. A tool to manage your multi-repo.",
-  "main": "./index.mjs",
-  "keywords": ["pnpm","multi-repo"],
+  "main": "./index.js",
+  "keywords": [
+    "pnpm",
+    "multi-repo"
+  ],
   "bin": {
     "ymultirepo": "./bin/index.js"
   },
@@ -35,5 +37,8 @@
   "homepage": "https://github.com/yuyaryshev/ymultirepo#readme",
   "devDependencies": {
     "prettier": "^2.0.5"
+  },
+  "dependencies": {
+    "javascript-stringify": "^2.0.1"
   }
 }

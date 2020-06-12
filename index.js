@@ -1,2 +1,0 @@
-import "./bin/index.js";
-
