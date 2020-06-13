@@ -87,7 +87,7 @@ class Policy {
 		for (let filename of files) {
 			if (!filename.isDirectory()) {
 				const filename = filename.name;
-				const fullPath = resolve(targetProjectPath, filename.name);
+				const targetFullPath = resolve(targetProjectPath, filename.name);
 				
 				let filePolicy = this.policy.files[filename];
 				if(undefined === filePolicy) {
@@ -97,33 +97,33 @@ class Policy {
 				
 				switch(filePolicy) {
 					case "notify":
-						console.log(`POLICY NOTIFICATION: ${fullPath} - add this file to the policy or remove it.`);
+						console.log(`POLICY NOTIFICATION: ${targetFullPath} - add this file to the policy or remove it.`);
 						break;
 					default:
-						console.warn(`POLICY WARNING: ${fullPath} - unknown policy mode '${filePolicy}'`);
+						console.warn(`POLICY WARNING: ${targetFullPath} - unknown policy mode '${filePolicy}'`);
 						break;
 					case "allowed": 
 						break;
 					case "delete":
 						try {
-							unlinkSync(fullPath);
-							console.log(`POLICY DELETION: ${fullPath} - was deleted because of policy setting.`);
+							unlinkSync(targetFullPath);
+							console.log(`POLICY DELETION: ${targetFullPath} - was deleted because of policy setting.`);
 						} catch(e) {
-							console.error(`POLICY DELETION: ${fullPath} - FAILED because of error: ${e.message}.`);
+							console.error(`POLICY DELETION: ${targetFullPath} - FAILED because of error: ${e.message}.`);
 						}
 						break;
 					case "sync":
-						this.syncFile(packageJson, filename, fullPath);
+						this.syncFile(packageJson, filename, targetFullPath, overwrite, updatingPolicyMode);
 						break;
 					case "syncJson":
-						this.syncJsonFile(packageJson, filename, fullPath);
+						this.syncJsonFile(packageJson, filename, targetFullPath, overwrite, updatingPolicyMode);
 						break;
 				}
 
 			}
 		}
 
-		function syncFile(packageJson, filename, targetFullPath, updatingPolicyMode) {
+		function syncFile(packageJson, filename, targetFullPath, overwrite, updatingPolicyMode) {
 			const etalonStr = fileReadSync(this.etalonPath(filename), "utf-8");
 			const etalonSplitted = etalonStr.split(POLICY_SPLITTER)[0];
 			const haveSplitter = etalonStr !== etalonSplitted;
@@ -163,9 +163,14 @@ class Policy {
 			}
 		}
 
-		function syncJsonFile(packageJson, filename, targetFullPath, updatingPolicyMode) {
+		function syncJsonFile(packageJson, filename, targetFullPath, overwrite, updatingPolicyMode) {
 			const etalonObj = JSON.parse(fileReadSync(this.etalonPath(filename), "utf-8"));
 			let shouldSaveEtalon = false;
+
+			if(!etalonObj["!notify"]) { etalonObj["!notify"] = []; shouldSaveEtalon = true; }
+			if(!etalonObj["!ignore"]) { etalonObj["!ignore"] = []; shouldSaveEtalon = true; }
+			if(!etalonObj["!delete"]) { etalonObj["!delete"] = []; shouldSaveEtalon = true; }
+			if(!etalonObj["!sync"]) { etalonObj["!sync"] = []; shouldSaveEtalon = true; }
 
 			let contentStr;
 			let contentObj;
@@ -194,11 +199,10 @@ class Policy {
 					contentObj[k] = etalonObj[k];
 				} else {
 					if(keys.notify.has(k))
-						console.log(`POLICY NOTIFICATION: ${fullPath} . ${k} - add this key to the policy or remove it.`);
+						console.log(`POLICY NOTIFICATION: ${targetFullPath} . ${k} - add this key to the policy or remove it.`);
 					else {
 						keys.notify.add(k);
-						if(!etalonObj["!notify"])
-							etalonObj["!notify"] = [];
+						if(!etalonObj["!notify"]) etalonObj["!notify"] = [];
 						etalonObj["!notify"].push(k);
 						shouldSaveEtalon = true;
 					}
