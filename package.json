@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/yuyaryshev/ymultirepo#readme",
   "devDependencies": {
+    "json5": "^2.2.0",
     "prettier": "^2.0.5"
   },
   "dependencies": {
